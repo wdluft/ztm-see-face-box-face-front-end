@@ -7,7 +7,7 @@ const Register = ({ onRouteChange, loadUser }) => {
   const [name, setName] = useState('');
 
   const onSubmitRegister = () => {
-    fetch('http://localhost:6969/register', {
+    fetch('https://ancient-island-08121.herokuapp.com/register', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -18,7 +18,7 @@ const Register = ({ onRouteChange, loadUser }) => {
     })
       .then((res) => res.json())
       .then((user) => {
-        if (user) {
+        if (user.id) {
           loadUser(user);
           onRouteChange('home');
         }

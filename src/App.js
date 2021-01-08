@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Particles from 'react-particles-js';
 import './App.css';
-import Clarifai from 'clarifai';
 import ImageLinkForm from './components/image-link-form/ImageLinkForm';
 import Logo from './components/logo/Logo';
 import Navigation from './components/Navigation/Navigation';
@@ -12,9 +11,13 @@ import FaceRecognition from './components/face-recognition/FaceRecognition';
 import SignIn from './components/sign-in/SignIn';
 import Register from './components/register/Register';
 
-const app = new Clarifai.App({
-  apiKey: '865c4f2fbc0d495cb26a0d4fcd11bc68',
-});
+const initialUserState = {
+  id: '',
+  name: '',
+  email: '',
+  entries: 0,
+  joined: '',
+};
 
 const particleOptions = {
   particles: {
@@ -37,13 +40,14 @@ function App() {
   const [box, setBox] = useState({});
   const [route, setRoute] = useState('signin');
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({
-    id: '',
-    name: '',
-    email: '',
-    entries: 0,
-    joined: '',
-  });
+  const [user, setUser] = useState({ ...initialUserState });
+
+  const resetState = () => {
+    setInput(() => '');
+    setImageUrl(() => '');
+    setBox(() => ({}));
+    setUser(() => ({ ...initialUserState }));
+  };
 
   const loadUser = (user) => {
     setUser({
@@ -76,17 +80,22 @@ function App() {
 
   const displayFaceBox = (box) => {
     setBox(() => box);
-    console.log(box);
   };
 
   const onPictureSubmit = () => {
     setImageUrl(() => input);
 
-    app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, input)
+    fetch('https://ancient-island-08121.herokuapp.com/imageurl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input,
+      }),
+    })
+      .then((response) => response.json())
       .then((res) => {
         if (res) {
-          fetch('http://localhost:6969/image', {
+          fetch('https://ancient-island-08121.herokuapp.com/image', {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -96,18 +105,20 @@ function App() {
             .then((res) => res.json())
             .then((count) => {
               setUser({ ...user, entries: count });
-            });
+            })
+            .catch((err) => console.log(err));
         }
         displayFaceBox(calculateFaceLocation(res));
       })
       .catch((err) => console.log(err));
   };
 
-  const onRouteChange = (newRoute) => {
+  const onRouteChange = async (newRoute) => {
     if (newRoute === 'home') {
       setIsSignedIn(() => true);
     } else {
       setIsSignedIn(() => false);
+      resetState();
     }
     setRoute(() => newRoute);
   };
