@@ -5,10 +5,11 @@ import React, { useState } from 'react';
 const SignIn = ({ onRouteChange, loadUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [inputErrors, setInputErrors] = useState({ errors: [] });
 
   const onSubmitSignIn = async (e) => {
     e.preventDefault();
-    await fetch('https://ancient-island-08121.herokuapp.com/signin', {
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -17,12 +18,15 @@ const SignIn = ({ onRouteChange, loadUser }) => {
       }),
     })
       .then((res) => res.json())
-      .then((user) => {
-        if (user.id) {
-          loadUser(user);
+      .then((data) => {
+        if (data.errors) {
+          setInputErrors(() => ({ errors: data.errors }));
+        } else if (data.id) {
+          loadUser(data);
           onRouteChange('home');
         }
-      });
+      })
+      .catch((err) => console.log(`Whoops, something went wrong!`));
   };
 
   return (
@@ -43,6 +47,7 @@ const SignIn = ({ onRouteChange, loadUser }) => {
                   id="email-address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               <div className="mv3">
@@ -56,9 +61,13 @@ const SignIn = ({ onRouteChange, loadUser }) => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </fieldset>
+            {inputErrors.errors.map((error, i) => (
+              <p key={`error-${i}`}>{error.msg}</p>
+            ))}
             <div className="">
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
