@@ -24,6 +24,7 @@ yarn-error.log*
 
 debug.log
 .eslintcache
+.eslintcache
 
 .env
 deployedStartScript.txt
