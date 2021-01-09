@@ -1,13 +1,17 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+import userEvent from '@testing-library/user-event';
 import React, { useState } from 'react';
 
 const Register = ({ onRouteChange, loadUser }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [inputErrors, setInputErrors] = useState({ errors: [] });
+
+  console.log(inputErrors);
 
   const onSubmitRegister = () => {
-    fetch('https://ancient-island-08121.herokuapp.com/register', {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/register`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -17,12 +21,17 @@ const Register = ({ onRouteChange, loadUser }) => {
       }),
     })
       .then((res) => res.json())
-      .then((user) => {
-        if (user.id) {
-          loadUser(user);
+      .then((data) => {
+        console.log('Response:');
+        if (data.errors) {
+          console.log(data.errors);
+          setInputErrors(() => ({ errors: data.errors }));
+        } else if (data.id) {
+          loadUser(data);
           onRouteChange('home');
         }
-      });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -43,6 +52,7 @@ const Register = ({ onRouteChange, loadUser }) => {
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  required
                 />
               </div>
               <div className="mt3">
@@ -56,6 +66,7 @@ const Register = ({ onRouteChange, loadUser }) => {
                   id="email-address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               <div className="mv3">
@@ -68,9 +79,13 @@ const Register = ({ onRouteChange, loadUser }) => {
                   name="password"
                   id="password"
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
             </fieldset>
+            {inputErrors.errors.map((error) => (
+              <p>{error.msg}</p>
+            ))}
             <div className="">
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
