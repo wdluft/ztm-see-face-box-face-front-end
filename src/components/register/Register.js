@@ -21,14 +21,13 @@ const Register = ({ onRouteChange, loadUser }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.errors) {
-          console.log(data.errors);
           setInputErrors(() => ({ errors: data.errors }));
         } else if (data.id) {
           loadUser(data);
           onRouteChange('home');
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(`Whoops, something went wrong!`));
   };
 
   return (
@@ -80,8 +79,8 @@ const Register = ({ onRouteChange, loadUser }) => {
                 />
               </div>
             </fieldset>
-            {inputErrors.errors.map((error) => (
-              <p>{error.msg}</p>
+            {inputErrors.errors.map((error, i) => (
+              <p key={`error-${i}`}>{error.msg}</p>
             ))}
             <div className="">
               <input
