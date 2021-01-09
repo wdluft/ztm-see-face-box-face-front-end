@@ -8,7 +8,7 @@ const SignIn = ({ onRouteChange, loadUser }) => {
 
   const onSubmitSignIn = async (e) => {
     e.preventDefault();
-    await fetch('https://ancient-island-08121.herokuapp.com/signin', {
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/signin`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -22,7 +22,8 @@ const SignIn = ({ onRouteChange, loadUser }) => {
           loadUser(user);
           onRouteChange('home');
         }
-      });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

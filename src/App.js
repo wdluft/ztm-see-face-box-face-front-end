@@ -85,7 +85,8 @@ function App() {
   const onPictureSubmit = () => {
     setImageUrl(() => input);
 
-    fetch('https://ancient-island-08121.herokuapp.com/imageurl', {
+    // set server url env variable on heroku to https://ancient-island-08121.herokuapp.com
+    fetch(`${process.env.REACT_APP_SERVER_URL}/imageurl`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -95,7 +96,7 @@ function App() {
       .then((response) => response.json())
       .then((res) => {
         if (res) {
-          fetch('https://ancient-island-08121.herokuapp.com/image', {
+          fetch(`${process.env.REACT_APP_SERVER_URL}/image`, {
             method: 'put',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
