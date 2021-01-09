@@ -1,5 +1,4 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import userEvent from '@testing-library/user-event';
 import React, { useState } from 'react';
 
 const Register = ({ onRouteChange, loadUser }) => {
@@ -8,10 +7,9 @@ const Register = ({ onRouteChange, loadUser }) => {
   const [name, setName] = useState('');
   const [inputErrors, setInputErrors] = useState({ errors: [] });
 
-  console.log(inputErrors);
-
-  const onSubmitRegister = () => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/register`, {
+  const onSubmitRegister = async (e) => {
+    e.preventDefault();
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/register`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -22,7 +20,6 @@ const Register = ({ onRouteChange, loadUser }) => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log('Response:');
         if (data.errors) {
           console.log(data.errors);
           setInputErrors(() => ({ errors: data.errors }));
@@ -89,9 +86,9 @@ const Register = ({ onRouteChange, loadUser }) => {
             <div className="">
               <input
                 className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
-                type="button"
+                type="submit"
                 value="Register"
-                onClick={onSubmitRegister}
+                onClick={(e) => onSubmitRegister(e)}
               />
             </div>
           </form>
