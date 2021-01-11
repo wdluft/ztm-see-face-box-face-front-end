@@ -10,6 +10,7 @@ import Rank from './components/rank/Rank';
 import FaceRecognition from './components/face-recognition/FaceRecognition';
 import SignIn from './components/sign-in/SignIn';
 import Register from './components/register/Register';
+import Leaderboard from './components/leaderboard/Leaderboard';
 
 const initialUserState = {
   id: '',
@@ -128,23 +129,65 @@ function App() {
     <div className="App">
       <Particles className="particles" params={particleOptions} />
       <Navigation onRouteChange={onRouteChange} isSignedIn={isSignedIn} />
-      {route === 'home' ? (
-        <>
-          <Logo />
-          <Rank name={user.name} entries={user.entries} />
-          <ImageLinkForm
-            onInputChange={onInputChange}
-            onPictureSubmit={onPictureSubmit}
-          />
-          <FaceRecognition imageUrl={imageUrl} box={box} />
-        </>
-      ) : route === 'signin' ? (
-        <SignIn onRouteChange={onRouteChange} loadUser={loadUser} />
-      ) : (
-        <Register onRouteChange={onRouteChange} loadUser={loadUser} />
-      )}
+      <Container
+        route={route}
+        onRouteChange={onRouteChange}
+        onInputChange={onInputChange}
+        onPictureSubmit={onPictureSubmit}
+        imageUrl={imageUrl}
+        box={box}
+        loadUser={loadUser}
+        user={user}
+      />
     </div>
   );
 }
+
+const Container = ({
+  route,
+  onRouteChange,
+  onInputChange,
+  onPictureSubmit,
+  imageUrl,
+  box,
+  loadUser,
+  user,
+}) => {
+  if (route === 'home') {
+    return (
+      <>
+        <Logo />
+        <Rank name={user.name} entries={user.entries} />
+        <ImageLinkForm
+          onInputChange={onInputChange}
+          onPictureSubmit={onPictureSubmit}
+        />
+        <FaceRecognition imageUrl={imageUrl} box={box} />
+      </>
+    );
+  }
+  if (route === 'leaderboard') {
+    return (
+      <>
+        <Logo />
+        <Leaderboard />
+      </>
+    );
+  }
+  if (route === 'register') {
+    return (
+      <>
+        <Logo />
+        <Register onRouteChange={onRouteChange} loadUser={loadUser} />
+      </>
+    );
+  }
+  return (
+    <>
+      <Logo />
+      <SignIn onRouteChange={onRouteChange} loadUser={loadUser} />
+    </>
+  );
+};
 
 export default App;
