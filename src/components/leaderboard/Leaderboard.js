@@ -18,16 +18,19 @@ const Leaderboard = () => {
 
   return (
     <div>
-      <h1>Leaderboard</h1>
-      <div className="pa3 pa5-ns">
-        <dl className="f6 lh-title mv2">
-          <dt className="dib b">Name - </dt>
-          <dd className="dib ml0 gray">Entries</dd>
+      <h1 className="f1">Leaderboard</h1>
+      <div className="pa3 pa5-ns pt0-ns">
+        <dl className="f3 lh-title mv2">
+          <dt className="dib b f3">Name - </dt>
+          <dd className="dib ml0 b f3">&nbsp;Entries</dd>
         </dl>
-        {leaders.map((leader) => (
-          <dl className="f6 lh-title mv2">
-            <dt className="dib b">{leader.name} - </dt>
-            <dd className="dib ml0 gray">&nbsp;{leader.entries}</dd>
+        {leaders.map((leader, i) => (
+          <dl className="f4 lh-title mv2" key={leader.id}>
+            <dt className="dib b">
+              {`${i + 1}. `}
+              {leader.name} -{' '}
+            </dt>
+            <dd className="dib ml0 b">&nbsp;{leader.entries}</dd>
           </dl>
         ))}
       </div>
