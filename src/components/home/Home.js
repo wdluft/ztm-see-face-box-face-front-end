@@ -33,9 +33,10 @@ const Home = ({ user, setUser }) => {
     };
   };
 
-  const onPictureSubmit = () => {
+  const onPictureSubmit = async () => {
     setImageUrl(() => input);
-    fetch(`${process.env.REACT_APP_SERVER_URL}/imageurl`, {
+    setInput(() => '');
+    await fetch(`${process.env.REACT_APP_SERVER_URL}/imageurl`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -75,6 +76,7 @@ const Home = ({ user, setUser }) => {
       <ImageLinkForm
         onPictureSubmit={onPictureSubmit}
         onInputChange={onInputChange}
+        input={input}
       />
       <FaceRecognition imageUrl={imageUrl} box={box} />
     </>
