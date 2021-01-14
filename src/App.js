@@ -5,6 +5,7 @@ import Particles from 'react-particles-js';
 import './App.css';
 import Navigation from './components/Navigation/Navigation';
 import Container from './components/container/Container';
+import Footer from './components/footer/Footer';
 
 const initialUserState = {
   id: '',
@@ -75,6 +76,7 @@ function App() {
         loadUser={loadUser}
         onRouteChange={onRouteChange}
       />
+      <Footer />
     </div>
   );
 }

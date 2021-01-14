@@ -6,36 +6,39 @@ import Rank from '../rank/Rank';
 const Home = ({ user, setUser }) => {
   const [input, setInput] = useState('');
   const [imageUrl, setImageUrl] = useState('');
-  const [box, setBox] = useState({});
+  const [boxes, setBoxes] = useState([]);
 
   const resetImageState = () => {
     setInput(() => '');
     setImageUrl(() => '');
-    setBox(() => ({}));
+    setBoxes(() => []);
   };
 
   const displayFaceBox = (boxCoords) => {
-    setBox(() => boxCoords);
+    setBoxes(() => boxCoords);
   };
 
   const calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
+    // get all faces
+    const faces = data.outputs[0].data.regions;
+
     const image = document.getElementById('inputImage');
     const width = Number(image.width);
     const height = Number(image.height);
 
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      bottomRow: height - clarifaiFace.bottom_row * height,
-    };
+    return faces.map((face) => ({
+      leftCol: face.region_info.bounding_box.left_col * width,
+      topRow: face.region_info.bounding_box.top_row * height,
+      rightCol: width - face.region_info.bounding_box.right_col * width,
+      bottomRow: height - face.region_info.bounding_box.bottom_row * height,
+    }));
   };
 
   const onPictureSubmit = async () => {
     setImageUrl(() => input);
     setInput(() => '');
+
+    // call clarifai api
     await fetch(`${process.env.REACT_APP_SERVER_URL}/imageurl`, {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
@@ -78,7 +81,7 @@ const Home = ({ user, setUser }) => {
         onInputChange={onInputChange}
         input={input}
       />
-      <FaceRecognition imageUrl={imageUrl} box={box} />
+      <FaceRecognition imageUrl={imageUrl} boxes={boxes} />
     </>
   );
 };
