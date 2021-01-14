@@ -24,7 +24,13 @@ const particleOptions = {
       },
     },
     color: {
-      value: '#ffffff',
+      value: '#000000',
+    },
+    size: {
+      value: 2,
+    },
+    line_linked: {
+      color: '#000000',
     },
   },
 };

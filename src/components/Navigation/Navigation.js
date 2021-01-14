@@ -5,21 +5,24 @@ import React from 'react';
 const Navigation = ({ onRouteChange, isSignedIn }) => {
   if (isSignedIn) {
     return (
-      <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
+      <nav
+        style={{ display: 'flex', justifyContent: 'flex-end' }}
+        className="white"
+      >
         <p
-          className="f3 link dim black underline pa3 pointer"
+          className="f3 link dim underline pa3 pointer"
           onClick={() => onRouteChange('home')}
         >
           Home
         </p>
         <p
-          className="f3 link dim black underline pa3 pointer"
+          className="f3 link dim underline pa3 pointer"
           onClick={() => onRouteChange('leaderboard')}
         >
           Leaderboard
         </p>
         <p
-          className="f3 link dim black underline pa3 pointer"
+          className="f3 link dim underline pa3 pointer"
           onClick={() => onRouteChange('signin')}
         >
           Sign Out
@@ -30,19 +33,19 @@ const Navigation = ({ onRouteChange, isSignedIn }) => {
   return (
     <nav style={{ display: 'flex', justifyContent: 'flex-end' }}>
       <p
-        className="f3 link dim black underline pa3 pointer"
+        className="f3 link dim underline pa3 pointer"
         onClick={() => onRouteChange('leaderboard')}
       >
         Leaderboard
       </p>
       <p
-        className="f3 link dim black underline pa3 pointer"
+        className="f3 link dim underline pa3 pointer"
         onClick={() => onRouteChange('signin')}
       >
         Sign In
       </p>
       <p
-        className="f3 link dim black underline pa3 pointer"
+        className="f3 link dim underline pa3 pointer"
         onClick={() => onRouteChange('register')}
       >
         Register
